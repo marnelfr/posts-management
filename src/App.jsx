@@ -45,32 +45,35 @@ function App() {
   }
 
   const handleUpdatePost = (post) => {
-    setNewPostFormOpen(true)
     setPostForUpdate(post)
+    setNewPostFormOpen(true)
+  }
+
+  const displayPosts = () => {
+    return (
+      <>
+        {isLoadedAndHavePost && <Posts onUpdatePost={handleUpdatePost} data={posts} />}
+        {isLoadedAndDontHavePost && (
+          <Card>
+            <h2>There are no posts yet.</h2>
+            <p>Start adding some!</p>
+          </Card>
+        )}
+        {isFetching && (<Card><p>Loading posts...</p></Card>)}
+      </>
+    )
   }
 
   if(isNewPostModalOpen) {
     return (
       <>
-
         <Header onNewPostClick={handleShowNewPostForm} />
-
         <main>
           <NewPost post={postForUpdate}
                    onNewPostFormSubmit={handleSubmitNewPost}
                    onCancel={handleShowNewPostForm}
           />
-
-          {isLoadedAndHavePost && <Posts onUpdatePost={handleUpdatePost} data={posts} />}
-
-          {isLoadedAndDontHavePost && (
-            <Card>
-              <h2>There are no posts yet.</h2>
-              <p>Start adding some!</p>
-            </Card>
-          )}
-
-          {isFetching && (<Card><p>Loading posts...</p></Card>)}
+          {displayPosts()}
         </main>
       </>
     )
@@ -79,19 +82,7 @@ function App() {
   return (
     <>
       <Header onNewPostClick={handleShowNewPostForm} />
-
-      <main>
-        {isLoadedAndHavePost && <Posts onUpdatePost={handleUpdatePost} data={posts} />}
-
-        {isLoadedAndDontHavePost && (
-          <Card>
-            <h2>There are no posts yet.</h2>
-            <p>Start adding some!</p>
-          </Card>
-        )}
-
-        {isFetching && (<Card><p>Loading posts...</p></Card>)}
-      </main>
+      <main>{displayPosts()}</main>
     </>
   )
 }
