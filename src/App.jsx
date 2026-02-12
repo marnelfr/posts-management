@@ -1,68 +1,38 @@
+
 import classes from './components/style.module.css'
+import Header from "./components/header/Header";
+import NewPost from "./components/post/NewPost.jsx";
+import Card from "./components/Message/Card.jsx";
+import Post from "./components/post/Post.jsx";
+import {useState} from "react";
 
 function App() {
-  let isOpen = false
+  const [isNewPostModalOpen, setNewPostFormOpen] = useState(false)
   let isLoadedAndHavePost = true
   let isLoadedAndDontHavePost = false
   let isFetching = false
 
+  const handleShowNewPostForm = () => {
+    setNewPostFormOpen(!isNewPostModalOpen)
+  }
+
   return (
     <>
-      <header className={classes.header}>
-        <h1 className={classes.logo}>
-          🟧
-          React Poster
-        </h1>
-        <p>
-          <button className={classes.button}>
-            🟧
-            New Post
-          </button>
-        </p>
-      </header>
+      <Header onNewPostClick={handleShowNewPostForm} />
       <main>
-        {isOpen && (
-          <div>
-            <div className={classes.backdrop} />
-            <dialog open className={classes.modal}>
-              <form className={classes.form}>
-                <p>
-                  <label htmlFor="body">Text</label>
-                  <textarea id="body" required rows={3}/>
-                </p>
-                <p>
-                  <label htmlFor="name">Your name</label>
-                  <input type="text" id="name" required/>
-                </p>
-                <p className={classes.actions}>
-                  <button type="button">
-                    Cancel
-                  </button>
-                  <button>Submit</button>
-                </p>
-              </form>
-            </dialog>
-          </div>
-        )}
+        {isNewPostModalOpen && <NewPost onCancle={handleShowNewPostForm} />}
         {isLoadedAndHavePost && (
           <ul className={classes.posts}>
-            <li className={classes.post}>
-              <p className={classes.author}>Author name</p>
-              <p className={classes.text}>This is the body of the post.</p>
-            </li>
+            <Post author={'Author name'} body="The post content body" />
           </ul>
         )}
         {isLoadedAndDontHavePost && (
-          <div style={{ textAlign: 'center', color: 'white' }}>
+          <Card>
             <h2>There are no posts yet.</h2>
             <p>Start adding some!</p>
-          </div>
+          </Card>
         )}
-        {isFetching && (
-          <div style={{ textAlign: 'center', color: 'white' }}>
-            <p>Loading posts...</p>
-          </div>
-        )}
+        {isFetching && (<Card><p>Loading posts...</p></Card>)}
       </main>
     </>
   )
