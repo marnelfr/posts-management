@@ -1,6 +1,7 @@
 import classes from './components/style.module.css'
 import Header from "./components/header/Header";
 import NewPost from "./components/post/NewPost.jsx";
+import Posts from "./components/post/Posts.jsx";
 import Card from "./components/Message/Card.jsx";
 import Post from "./components/post/Post.jsx";
 import {useEffect, useReducer, useState} from "react";
@@ -10,8 +11,8 @@ function App() {
   const [isNewPostModalOpen, setNewPostFormOpen] = useState(false)
   const [posts, dispatch] = useReducer(PostReducer, [])
   const [isFetching, setIsFetching] = useState(true)
-  let isLoadedAndHavePost = true
-  let isLoadedAndDontHavePost = false
+  const [isLoadedAndHavePost, setIsLoadedAndHavePost] = useState(false)
+  const [isLoadedAndDontHavePost, setIsLoadedAndDontHavePost] = useState(false)
 
   useEffect(() => {
     if (isFetching) {
@@ -22,8 +23,12 @@ function App() {
             body: 'This is a example of post with a fake body content'
           }
           dispatch({type: 'load', payload: [post]})
+          setIsLoadedAndHavePost(true)
+          setIsLoadedAndDontHavePost(false)
         } else {
           dispatch({type: 'load', payload: []})
+          setIsLoadedAndHavePost(false)
+          setIsLoadedAndDontHavePost(true)
         }
         setIsFetching(false)
       }, 1000)
@@ -39,11 +44,7 @@ function App() {
       <Header onClick={handleShowNewPostForm} />
       <main>
         {isNewPostModalOpen && <NewPost onCancle={handleShowNewPostForm} />}
-        {isLoadedAndHavePost && (
-          <ul className={classes.posts}>
-            {posts.map(post => <Post key={post.id} author={post.author} body={post.body} />)}
-          </ul>
-        )}
+        {isLoadedAndHavePost && <Posts data={posts} />}
         {isLoadedAndDontHavePost && (
           <Card>
             <h2>There are no posts yet.</h2>
