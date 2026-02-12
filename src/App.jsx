@@ -34,21 +34,35 @@ function App() {
   }, [isFetching])
 
   const handleShowNewPostForm = () => {
+    console.log('d');
     setNewPostFormOpen(!isNewPostModalOpen)
+  }
+
+  const handleSubmitNewPost = (name, body) => {
+    dispatch({type: 'add', payload: {author: name, body}})
+    setIsLoadedAndHavePost(true)
+    setIsLoadedAndDontHavePost(false)
   }
 
   return (
     <>
-      <Header onClick={handleShowNewPostForm} />
+      <Header onNewPostClick={handleShowNewPostForm} />
+
       <main>
-        {isNewPostModalOpen && <NewPost onCancle={handleShowNewPostForm} />}
+        {isNewPostModalOpen && <NewPost
+          onNewPostFormSubmit={handleSubmitNewPost}
+          onCancle={handleShowNewPostForm}
+        />}
+
         {isLoadedAndHavePost && <Posts data={posts} />}
+
         {isLoadedAndDontHavePost && (
           <Card>
             <h2>There are no posts yet.</h2>
             <p>Start adding some!</p>
           </Card>
         )}
+
         {isFetching && (<Card><p>Loading posts...</p></Card>)}
       </main>
     </>

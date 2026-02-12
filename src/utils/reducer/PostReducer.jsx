@@ -1,6 +1,8 @@
 const generateId = (state) => {
-  const lastId = state[state.length].id
-  return lastId+1
+  if(state.length > 0) {
+    return state[state.length-1].id + 1
+  }
+  return 1
 }
 
 const load = (state, action) => {
@@ -34,7 +36,7 @@ export const PostReducer = (state, action) => {
     case 'load':
       return load(state, action)
     case 'add':
-      return add(state)
+      return add(state, action)
     case 'update':
       return update(state, action)
     case 'delete':
