@@ -23,7 +23,16 @@ const add = (state, action) => {
 }
 
 const update = (state, action) => {
-
+  let i = 0
+  for (const post of state) {
+    if(post.id === action.payload.id) {
+      post.author = action.payload.author;
+      post.body = action.payload.body;
+      state[i] = post
+    }
+    i++
+  }
+  return state
 }
 
 const remove = (state, action) => {
