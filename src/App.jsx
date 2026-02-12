@@ -1,9 +1,7 @@
-import classes from './components/style.module.css'
 import Header from "./components/header/Header";
 import NewPost from "./components/post/NewPost.jsx";
 import Posts from "./components/post/Posts.jsx";
 import Card from "./components/Message/Card.jsx";
-import Post from "./components/post/Post.jsx";
 import {useEffect, useReducer, useState} from "react";
 import {PostReducer} from "./utils/reducer/PostReducer.jsx";
 
