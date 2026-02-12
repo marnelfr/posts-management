@@ -4,14 +4,18 @@ const generateId = (state) => {
 }
 
 const load = (state, action) => {
-  return action.data
+  let id = 0
+  return action.payload.map(post => {
+    id++
+    return {id, ...post}
+  })
 }
 
 const add = (state, action) => {
   const post = {
     id: generateId(state),
-    author: action.author,
-    body: action.body
+    author: action.payload.author,
+    body: action.payload.body
   }
   return [...state, post]
 }
@@ -28,7 +32,7 @@ const remove = (state, action) => {
 export const PostReducer = (state, action) => {
   switch (action.type) {
     case 'load':
-      return load(state)
+      return load(state, action)
     case 'add':
       return add(state)
     case 'update':
