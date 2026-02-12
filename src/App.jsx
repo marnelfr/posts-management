@@ -35,11 +35,16 @@ function App() {
   }, [isFetching])
 
   const handleShowNewPostForm = () => {
+    setPostForUpdate(null)
     setNewPostFormOpen(!isNewPostModalOpen)
   }
 
-  const handleSubmitNewPost = (name, body) => {
-    dispatch({type: 'add', payload: {author: name, body}})
+  const handleSubmitNewPost = (post) => {
+    if(post.id > 0) {
+      dispatch({type: 'update', payload: post})
+    } else {
+      dispatch({type: 'add', payload: post})
+    }
     setIsLoadedAndHavePost(true)
     setIsLoadedAndDontHavePost(false)
   }
@@ -49,9 +54,15 @@ function App() {
     setNewPostFormOpen(true)
   }
 
-  const displayPosts = () => {
-    return (
-      <>
+  return (
+    <>
+      <Header onNewPostClick={handleShowNewPostForm} />
+      <main>
+        {isNewPostModalOpen && <NewPost
+          post={postForUpdate}
+          onNewPostFormSubmit={handleSubmitNewPost}
+          onCancel={handleShowNewPostForm}
+        />}
         {isLoadedAndHavePost && <Posts onUpdatePost={handleUpdatePost} data={posts} />}
         {isLoadedAndDontHavePost && (
           <Card>
@@ -60,29 +71,7 @@ function App() {
           </Card>
         )}
         {isFetching && (<Card><p>Loading posts...</p></Card>)}
-      </>
-    )
-  }
-
-  if(isNewPostModalOpen) {
-    return (
-      <>
-        <Header onNewPostClick={handleShowNewPostForm} />
-        <main>
-          <NewPost post={postForUpdate}
-                   onNewPostFormSubmit={handleSubmitNewPost}
-                   onCancel={handleShowNewPostForm}
-          />
-          {displayPosts()}
-        </main>
-      </>
-    )
-  }
-
-  return (
-    <>
-      <Header onNewPostClick={handleShowNewPostForm} />
-      <main>{displayPosts()}</main>
+      </main>
     </>
   )
 }

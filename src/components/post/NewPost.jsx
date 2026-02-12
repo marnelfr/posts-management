@@ -4,19 +4,19 @@ import {useState} from "react";
 
 const NewPost = ({post, onCancel, onNewPostFormSubmit}) => {
   const [body, setBody] = useState(post?.body ?? '')
-  const [name, setName] = useState(post?.author ?? '')
+  const [author, setAuthor] = useState(post?.author ?? '')
 
   const handleBody = event => {
     setBody(event.target.value)
   }
 
-  const handleName = event => {
-    setName(event.target.value)
+  const handleAuthor = event => {
+    setAuthor(event.target.value)
   }
 
   const handleSubmit = event => {
     event.preventDefault()
-    onNewPostFormSubmit(name, body)
+    onNewPostFormSubmit({...post, author, body})
     onCancel()
   }
 
@@ -29,7 +29,7 @@ const NewPost = ({post, onCancel, onNewPostFormSubmit}) => {
         </p>
         <p>
           <label htmlFor="name">Your name</label>
-          <input type="text" id="name" value={name} onChange={handleName} required/>
+          <input type="text" id="name" value={author} onChange={handleAuthor} required/>
         </p>
         <p className={classes.actions}>
           <button onClick={onCancel} type="button">
