@@ -2,9 +2,9 @@ import Modal from "../Modal/Modal.jsx";
 import classes from './newpost.module.css'
 import {useState} from "react";
 
-const NewPost = ({onCancle, onNewPostFormSubmit}) => {
-  const [body, setBody] = useState('')
-  const [name, setName] = useState('')
+const NewPost = ({post, onCancel, onNewPostFormSubmit}) => {
+  const [body, setBody] = useState(post?.body ?? '')
+  const [name, setName] = useState(post?.author ?? '')
 
   const handleBody = event => {
     setBody(event.target.value)
@@ -17,11 +17,11 @@ const NewPost = ({onCancle, onNewPostFormSubmit}) => {
   const handleSubmit = event => {
     event.preventDefault()
     onNewPostFormSubmit(name, body)
-    onCancle()
+    onCancel()
   }
 
   return (
-    <Modal onClose={onCancle}>
+    <Modal onClose={onCancel}>
       <form onSubmit={handleSubmit} className={classes.form}>
         <p>
           <label htmlFor="body">Text</label>
@@ -32,7 +32,7 @@ const NewPost = ({onCancle, onNewPostFormSubmit}) => {
           <input type="text" id="name" value={name} onChange={handleName} required/>
         </p>
         <p className={classes.actions}>
-          <button onClick={onCancle} type="button">
+          <button onClick={onCancel} type="button">
             Cancel
           </button>
           <button>Submit</button>

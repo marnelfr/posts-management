@@ -1,10 +1,14 @@
 import classes from "../style.module.css";
 
-const Post = ({author, body}) => {
+const Post = ({post, onUpdatePost}) => {
+  const handleUpdate = event => {
+    event.preventDefault()
+    onUpdatePost(post)
+  }
   return (
-    <li className={classes.post}>
-      <p className={classes.author}>{author}</p>
-      <p className={classes.text}>{body}</p>
+    <li onClick={handleUpdate} className={classes.post}>
+      <p className={classes.author}>{post.author}</p>
+      <p className={classes.text}>{post.body}</p>
     </li>
   )
 }

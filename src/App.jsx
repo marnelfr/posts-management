@@ -9,6 +9,7 @@ function App() {
   const [isNewPostModalOpen, setNewPostFormOpen] = useState(false)
   const [posts, dispatch] = useReducer(PostReducer, [])
   const [isFetching, setIsFetching] = useState(true)
+  const [postForUpdate, setPostForUpdate] = useState()
   const [isLoadedAndHavePost, setIsLoadedAndHavePost] = useState(false)
   const [isLoadedAndDontHavePost, setIsLoadedAndDontHavePost] = useState(false)
 
@@ -34,7 +35,6 @@ function App() {
   }, [isFetching])
 
   const handleShowNewPostForm = () => {
-    console.log('d');
     setNewPostFormOpen(!isNewPostModalOpen)
   }
 
@@ -44,17 +44,44 @@ function App() {
     setIsLoadedAndDontHavePost(false)
   }
 
+  const handleUpdatePost = (post) => {
+    setNewPostFormOpen(true)
+    setPostForUpdate(post)
+  }
+
+  if(isNewPostModalOpen) {
+    return (
+      <>
+
+        <Header onNewPostClick={handleShowNewPostForm} />
+
+        <main>
+          <NewPost post={postForUpdate}
+                   onNewPostFormSubmit={handleSubmitNewPost}
+                   onCancel={handleShowNewPostForm}
+          />
+
+          {isLoadedAndHavePost && <Posts onUpdatePost={handleUpdatePost} data={posts} />}
+
+          {isLoadedAndDontHavePost && (
+            <Card>
+              <h2>There are no posts yet.</h2>
+              <p>Start adding some!</p>
+            </Card>
+          )}
+
+          {isFetching && (<Card><p>Loading posts...</p></Card>)}
+        </main>
+      </>
+    )
+  }
+
   return (
     <>
       <Header onNewPostClick={handleShowNewPostForm} />
 
       <main>
-        {isNewPostModalOpen && <NewPost
-          onNewPostFormSubmit={handleSubmitNewPost}
-          onCancle={handleShowNewPostForm}
-        />}
-
-        {isLoadedAndHavePost && <Posts data={posts} />}
+        {isLoadedAndHavePost && <Posts onUpdatePost={handleUpdatePost} data={posts} />}
 
         {isLoadedAndDontHavePost && (
           <Card>

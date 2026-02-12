@@ -1,10 +1,10 @@
 import classes from "./posts.module.css";
 import Post from "./Post.jsx";
 
-const Posts = ({data}) => {
+const Posts = ({data, onUpdatePost}) => {
   return (
     <ul className={classes.posts}>
-      {data.map(post => <Post key={post.id} author={post.author} body={post.body} />)}
+      {data.map(post => <Post onUpdatePost={onUpdatePost} key={post.id} post={post} />)}
     </ul>
   )
 }
