@@ -36,7 +36,10 @@ const update = (state, action) => {
 }
 
 const remove = (state, action) => {
-
+  const data = state.filter(post => {
+    return post.id !== action.payload
+  })
+  return data
 }
 
 
@@ -49,7 +52,7 @@ export const PostReducer = (state, action) => {
     case 'update':
       return update(state, action)
     case 'delete':
-      return remove(state)
+      return remove(state, action)
     default:
       throw new Error(`Unhandled action type: ${action.type}`)
   }

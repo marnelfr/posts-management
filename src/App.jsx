@@ -10,8 +10,6 @@ function App() {
   const [posts, dispatch] = useReducer(PostReducer, [])
   const [isFetching, setIsFetching] = useState(true)
   const [postForUpdate, setPostForUpdate] = useState()
-  const [isLoadedAndHavePost, setIsLoadedAndHavePost] = useState(false)
-  const [isLoadedAndDontHavePost, setIsLoadedAndDontHavePost] = useState(false)
 
   useEffect(() => {
     if (isFetching) {
@@ -22,12 +20,8 @@ function App() {
             body: 'This is a example of post with a fake body content'
           }
           dispatch({type: 'load', payload: [post]})
-          setIsLoadedAndHavePost(true)
-          setIsLoadedAndDontHavePost(false)
         } else {
           dispatch({type: 'load', payload: []})
-          setIsLoadedAndHavePost(false)
-          setIsLoadedAndDontHavePost(true)
         }
         setIsFetching(false)
       }, 1000)
@@ -45,13 +39,17 @@ function App() {
     } else {
       dispatch({type: 'add', payload: post})
     }
-    setIsLoadedAndHavePost(true)
-    setIsLoadedAndDontHavePost(false)
   }
 
   const handleUpdatePost = (post) => {
     setPostForUpdate(post)
     setNewPostFormOpen(true)
+  }
+
+  const handleDeletePost = postId => {
+    if(window.confirm('Do you really want to delete the post?')) {
+      dispatch({type: 'delete', payload: postId})
+    }
   }
 
   return (
@@ -63,8 +61,12 @@ function App() {
           onNewPostFormSubmit={handleSubmitNewPost}
           onCancel={handleShowNewPostForm}
         />}
-        {isLoadedAndHavePost && <Posts onUpdatePost={handleUpdatePost} data={posts} />}
-        {isLoadedAndDontHavePost && (
+        {(!isFetching && posts.length > 0) && <Posts
+          data={posts}
+          onDeletePost={handleDeletePost}
+          onUpdatePost={handleUpdatePost}
+        />}
+        {(!isFetching && posts.length === 0) && (
           <Card>
             <h2>There are no posts yet.</h2>
             <p>Start adding some!</p>
