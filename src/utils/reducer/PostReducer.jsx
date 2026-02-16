@@ -9,6 +9,7 @@ const load = (state, action) => {
   let id = 0
   return action.payload.map(post => {
     id++
+    post.author = post.title
     return {id, ...post}
   })
 }

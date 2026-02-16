@@ -10,21 +10,26 @@ function App() {
   const [posts, dispatch] = useReducer(PostReducer, [])
   const [isFetching, setIsFetching] = useState(true)
   const [postForUpdate, setPostForUpdate] = useState()
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     if (isFetching) {
-      setTimeout(() => {
-        if(Math.random() > 0.5) {
-          const post = {
-            author: 'Nel Gnac',
-            body: 'This is a example of post with a fake body content'
+      const fetchData = async () => {
+        try {
+          const response = await fetch('https://jsonplaceholder.typicode.com/posts')
+          if (!response.ok) {
+            throw new Error('Could not load posts data')
           }
-          dispatch({type: 'load', payload: [post]})
-        } else {
-          dispatch({type: 'load', payload: []})
+          const payload = await response.json()
+          dispatch({type: 'load', payload})
+          setError(null)
+        } catch(e) {
+          setError(e.message)
+        } finally {
+          setIsFetching(false)
         }
-        setIsFetching(false)
-      }, 1000)
+      }
+      fetchData()
     }
   }, [isFetching])
 
@@ -66,7 +71,13 @@ function App() {
           onDeletePost={handleDeletePost}
           onUpdatePost={handleUpdatePost}
         />}
-        {(!isFetching && posts.length === 0) && (
+        {(!isFetching && posts.length === 0 && error !== null) && (
+          <Card>
+            <h2>{error}</h2>
+            <p>Please fresh the page or try to add new post!</p>
+          </Card>
+        )}
+        {(!isFetching && posts.length === 0 && error === null) && (
           <Card>
             <h2>There are no posts yet.</h2>
             <p>Start adding some!</p>
